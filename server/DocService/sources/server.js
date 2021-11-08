@@ -205,12 +205,6 @@ docsCoServer.install(server, () => {
 			'        "lang": "zh",\n' +
 			'        "customization": {\n' +
 			'            "anonymous": { "request": false },\n' +
-			'          "logo": {\n' +
-			'            "image": "https://passport.baidu.com/passApi/img/small_blank.gif",\n' +
-			'            "imageEmbedded": "https://passport.baidu.com/passApi/img/small_blank.gif",\n' +
-			'            "url": "https://www.baidu.com"\n' +
-			'          },\n' +
-			'          //"loaderName": " ",\n' +
 			'          "autosave": false,\n' +
 			'          "chat": false,\n' +
 			'          "commentAuthorOnly": false,\n' +
@@ -220,10 +214,8 @@ docsCoServer.install(server, () => {
 			'          "customer": {\n' +
 			'            "address": "address",\n' +
 			'            "info": "info",\n' +
-			'            "logo": "https://passport.baidu.com/passApi/img/small_blank.gif",\n' +
 			'            "mail": "mail",\n' +
 			'            "name": "name",\n' +
-			'            "www": "baidu.com"\n' +
 			'          },\n' +
 			'          "feedback": {\n' +
 			'            "url": "https://example.com",\n' +
