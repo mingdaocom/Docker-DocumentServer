@@ -1,10 +1,10 @@
 #!/bin/bash
 
-#function clean_exit {
-#  /usr/bin/documentserver-prepare4shutdown.sh
-#}
-#
-#trap clean_exit SIGTERM
+function clean_exit {
+  /usr/bin/documentserver-prepare4shutdown.sh
+}
+
+trap clean_exit SIGTERM
 
 # Define '**' behavior explicitly
 shopt -s globstar
@@ -500,112 +500,112 @@ if [ ${ONLYOFFICE_DATA_CONTAINER_HOST} = "localhost" ]; then
 
   read_setting
 
-#  if [ $METRICS_ENABLED = "true" ]; then
-#    update_statsd_settings
-#  fi
-#
-#  update_welcome_page
-#
-#  update_log_settings
-#
-#  update_ds_settings
-#
-#  # update settings by env variables
-#  if [ $DB_HOST != "localhost" ]; then
-#    update_db_settings
-#    waiting_for_db
-#    create_db_tbl
-#  else
-#    # change rights for postgres directory
-#    chown -R postgres:postgres ${PG_ROOT}
-#    chmod -R 700 ${PG_ROOT}
-#
-#    # create new db if it isn't exist
-#    if [ ! -d ${PGDATA} ]; then
-#      create_postgresql_cluster
-#      PG_NEW_CLUSTER=true
-#    fi
+  if [ $METRICS_ENABLED = "true" ]; then
+    update_statsd_settings
+  fi
+
+  update_welcome_page
+
+  update_log_settings
+
+  update_ds_settings
+
+  # update settings by env variables
+  if [ $DB_HOST != "localhost" ]; then
+    update_db_settings
+    waiting_for_db
+    create_db_tbl
+  else
+    # change rights for postgres directory
+    chown -R postgres:postgres ${PG_ROOT}
+    chmod -R 700 ${PG_ROOT}
+
+    # create new db if it isn't exist
+    if [ ! -d ${PGDATA} ]; then
+      create_postgresql_cluster
+      PG_NEW_CLUSTER=true
+    fi
     LOCAL_SERVICES+=("postgresql")
-#  fi
-#
-#  if [ ${AMQP_SERVER_HOST} != "localhost" ]; then
-#    update_rabbitmq_setting
-#  else
-#    # change rights for rabbitmq directory
-#    chown -R rabbitmq:rabbitmq ${RABBITMQ_DATA}
-#    chmod -R go=rX,u=rwX ${RABBITMQ_DATA}
-#    if [ -f ${RABBITMQ_DATA}/.erlang.cookie ]; then
-#        chmod 400 ${RABBITMQ_DATA}/.erlang.cookie
-#    fi
-#
+  fi
+
+  if [ ${AMQP_SERVER_HOST} != "localhost" ]; then
+    update_rabbitmq_setting
+  else
+    # change rights for rabbitmq directory
+    chown -R rabbitmq:rabbitmq ${RABBITMQ_DATA}
+    chmod -R go=rX,u=rwX ${RABBITMQ_DATA}
+    if [ -f ${RABBITMQ_DATA}/.erlang.cookie ]; then
+        chmod 400 ${RABBITMQ_DATA}/.erlang.cookie
+    fi
+
     LOCAL_SERVICES+=("rabbitmq-server")
-#    # allow Rabbitmq startup after container kill
-#    rm -rf /var/run/rabbitmq
-#  fi
-#
-#  if [ ${REDIS_ENABLED} = "true" ]; then
-#    if [ ${REDIS_SERVER_HOST} != "localhost" ]; then
-#      update_redis_settings
-#    else
-#      # change rights for redis directory
-#      chown -R redis:redis ${REDIS_DATA}
-#      chmod -R 750 ${REDIS_DATA}
-#
+    # allow Rabbitmq startup after container kill
+    rm -rf /var/run/rabbitmq
+  fi
+
+  if [ ${REDIS_ENABLED} = "true" ]; then
+    if [ ${REDIS_SERVER_HOST} != "localhost" ]; then
+      update_redis_settings
+    else
+      # change rights for redis directory
+      chown -R redis:redis ${REDIS_DATA}
+      chmod -R 750 ${REDIS_DATA}
+
       LOCAL_SERVICES+=("redis-server")
-#    fi
-#  fi
+    fi
+  fi
 else
   # no need to update settings just wait for remote data
-#  waiting_for_datacontainer
+  waiting_for_datacontainer
 
   # read settings after the data container in ready state
   # to prevent get unconfigureted data
   read_setting
-#  update_welcome_page
+  
+  update_welcome_page
 fi
 
 #start needed local services
 for i in ${LOCAL_SERVICES[@]}; do
-  echo $i
   service $i start
 done
 
-#if [ ${PG_NEW_CLUSTER} = "true" ]; then
-#  create_postgresql_db
-#  create_postgresql_tbl
-#fi
+if [ ${PG_NEW_CLUSTER} = "true" ]; then
+  create_postgresql_db
+  create_postgresql_tbl
+fi
 
-#if [ ${ONLYOFFICE_DATA_CONTAINER} != "true" ]; then
-#  waiting_for_db
-#  waiting_for_amqp
-#  if [ ${REDIS_ENABLED} = "true" ]; then
-#    waiting_for_redis
+if [ ${ONLYOFFICE_DATA_CONTAINER} != "true" ]; then
+  waiting_for_db
+  waiting_for_amqp
+  if [ ${REDIS_ENABLED} = "true" ]; then
+    waiting_for_redis
+  fi
+
+#  if [ "${IS_UPGRADE}" = "true" ]; then
+#    upgrade_db_tbl
+#    update_release_date
 #  fi
-#
-##  if [ "${IS_UPGRADE}" = "true" ]; then
-##    upgrade_db_tbl
-##    update_release_date
-##  fi
-#
-#  update_nginx_settings
-#
-#  update_supervisor_settings
+
+  update_nginx_settings
+
+  update_supervisor_settings
   service supervisor start
-#
-#  # start cron to enable log rotating
-#  update_logrotate_settings
+  
+  # start cron to enable log rotating
+  update_logrotate_settings
   service cron start
-#fi
+fi
 
 # nginx used as a proxy, and as data container status service.
 # it run in all cases.
 service nginx start
 
-#if [ "${LETS_ENCRYPT_DOMAIN}" != "" -a "${LETS_ENCRYPT_MAIL}" != "" ]; then
-#  if [ ! -f "${SSL_CERTIFICATE_PATH}" -a ! -f "${SSL_KEY_PATH}" ]; then
-#    documentserver-letsencrypt.sh ${LETS_ENCRYPT_MAIL} ${LETS_ENCRYPT_DOMAIN}
-#  fi
-#fi
+if [ "${LETS_ENCRYPT_DOMAIN}" != "" -a "${LETS_ENCRYPT_MAIL}" != "" ]; then
+  if [ ! -f "${SSL_CERTIFICATE_PATH}" -a ! -f "${SSL_KEY_PATH}" ]; then
+    documentserver-letsencrypt.sh ${LETS_ENCRYPT_MAIL} ${LETS_ENCRYPT_DOMAIN}
+  fi
+fi
 
 # Regenerate the fonts list and the fonts thumbnails
 #if [ "${GENERATE_FONTS}" == "true" ]; then

@@ -1,9 +1,7 @@
-FROM registry.cn-hangzhou.aliyuncs.com/mdpublic/mingdaoyun-doc:1.2.0
+FROM hub.mingdao.com/md/documentserverbase:20210805_1610
 
 #EXPOSE 80 443
 
-COPY etc/postgresql /etc/postgresql/
-COPY server/Common/config/log4js etc/onlyoffice/documentserver/log4js/
 COPY config /app/ds/setup/config/
 COPY run-document-server1.sh /app/ds/run-document-server1.sh
 COPY web-apps /var/www/onlyoffice/documentserver/web-apps/
