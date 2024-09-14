@@ -575,6 +575,10 @@ if [ ${PG_NEW_CLUSTER} = "true" ]; then
   create_postgresql_tbl
 fi
 
+if [ ${PG_NEW_CLUSTER} != "true" ]; then
+  sudo -u postgres psql -c "ALTER USER $DB_USER WITH password '"$DB_PWD"';"
+fi
+
 if [ ${ONLYOFFICE_DATA_CONTAINER} != "true" ]; then
   waiting_for_db
   waiting_for_amqp

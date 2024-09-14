@@ -7,6 +7,7 @@ RUN apt-get -y update && \
     rm -rf /etc/redis && \
     add-apt-repository ppa:chris-lea/redis-server -y && \
     apt-get -yq install redis
+COPY server/Common/config /etc/onlyoffice/documentserver/
 COPY config /app/ds/setup/config/
 COPY run-document-server1.sh /app/ds/run-document-server1.sh
 COPY web-apps /var/www/onlyoffice/documentserver/web-apps/
