@@ -1,12 +1,51 @@
 FROM hub.mingdao.com/md/documentserverbase:20210805_1610
 
-#EXPOSE 80 443
 RUN apt-get -y update && \
+    #nginx \
+#    service redis-server stop && \
+#    service rabbitmq-server stop && \
+#    service supervisor stop && \
+#    service nginx stop && \
+#    apt-get --purge remove nginx && \
+#    curl -fsSL https://nginx.org/keys/nginx_signing.key | gpg --dearmor \
+#        | tee /usr/share/keyrings/nginx-archive-keyring.gpg >/dev/null && \
+#    echo "deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] http://nginx.org/packages/mainline/ubuntu `lsb_release -cs` nginx" \
+#        | tee /etc/apt/sources.list.d/nginx.list && \
+#    apt-get update && \
+#    apt-get -yq install nginx && \
+    #curl \
+    apt-get -yq install apt-transport-https ca-certificates gnupg software-properties-common wget zip && \
+    #wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | sudo tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null && \
+    wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | sudo apt-key add - && \
+    apt-add-repository "deb https://apt.kitware.com/ubuntu/ $(lsb_release -cs) main" && \
+    apt-get update && \
+    apt-get -yq install cmake && \
+    apt-get -yq install git && \
+    git clone https://github.com/Microsoft/vcpkg.git && \
+    cd vcpkg && \
+    ./bootstrap-vcpkg.sh && \
+    ./vcpkg integrate install && \
+    ./vcpkg install curl[tool] && \
+    #rabbitmq
+    wget -O- https://packages.erlang-solutions.com/ubuntu/erlang_solutions.asc | apt-key add - && \
+    echo "deb https://packages.erlang-solutions.com/ubuntu focal contrib" | tee /etc/apt/sources.list.d/erlang-solution.list && \
+    apt-get -yq remove rabbitmq-server && \
+    apt-get -yq install erlang && \
+    apt-get -y update && \
+    curl -s https://packagecloud.io/install/repositories/rabbitmq/rabbitmq-server/script.deb.sh | bash && \
+    apt-get -yq install rabbitmq-server=3.11.28-1 && \
+    #redis
     apt-get remove -yq redis-server && \
     apt-get remove -yq --purge redis-server && \
     rm -rf /etc/redis && \
     add-apt-repository ppa:chris-lea/redis-server -y && \
-    apt-get -yq install redis
+    apt-get -yq install redis && \
+    #
+    service redis-server stop && \
+    service rabbitmq-server stop && \
+    service supervisor stop && \
+    service nginx stop && \
+    rm -rf /var/lib/apt/lists/*
 COPY server/Common/config /etc/onlyoffice/documentserver/
 COPY config /app/ds/setup/config/
 COPY run-document-server1.sh /app/ds/run-document-server1.sh
