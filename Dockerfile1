@@ -14,11 +14,14 @@ RUN apt-get -y update && \
 #    apt-get update && \
 #    apt-get -yq install nginx && \
     #curl \
-    apt-get -yq install apt-transport-https ca-certificates gnupg software-properties-common wget zip && \
-    #wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | sudo tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null && \
-    wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | sudo apt-key add - && \
-    apt-add-repository "deb https://apt.kitware.com/ubuntu/ $(lsb_release -cs) main" && \
+    apt-get -yq install apt-transport-https ca-certificates gpg wget zip && \
+    test -f /usr/share/doc/kitware-archive-keyring/copyright && \
+    wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | sudo tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null && \
+    echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ $(lsb_release -cs) main' | sudo tee /etc/apt/sources.list.d/kitware.list >/dev/null && \
     apt-get update && \
+    test -f /usr/share/doc/kitware-archive-keyring/copyright && \
+    sudo rm /usr/share/keyrings/kitware-archive-keyring.gpg && \
+    apt-get -yq install kitware-archive-keyring && \
     apt-get -yq install cmake && \
     apt-get -yq install git && \
     git clone https://github.com/Microsoft/vcpkg.git && \
