@@ -22,7 +22,7 @@ RUN apt-get -y update && \
     apt-get -yq install kitware-archive-keyring && \
     apt-get -yq install cmake && \
     apt-get -yq install git && \
-    git clone https://github.com/Microsoft/vcpkg.git && \
+    git clone https://gitee.com/my-mirrors/vcpkg.git && \
     cd vcpkg && \
     ./bootstrap-vcpkg.sh && \
     ./vcpkg integrate install && \
