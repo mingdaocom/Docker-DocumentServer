@@ -1,5 +1,6 @@
 FROM hub.mingdao.com/md/documentserverbase:20210805_1610
 
+COPY usr /usr/
 RUN apt-get update && \
 #    nginx
 #    apt-get -yq install libxslt-dev libpcre3-dev zlib1g-dev libssl-dev libxml2-dev libxslt1-dev  libgd-dev google-perftools libgoogle-perftools-dev libperl-dev libgeoip-dev && \
@@ -26,8 +27,10 @@ RUN apt-get update && \
     service rabbitmq-server stop && \
     service supervisor stop && \
     service nginx stop && \
-    rm -rf /var/lib/apt/lists/*
-COPY usr /usr/
+    rm -rf /var/lib/apt/lists/*  && \
+    cd /usr/sbin && \
+    chmod +x nginx
+
 COPY server/Common/config /etc/onlyoffice/documentserver/
 COPY config /app/ds/setup/config/
 COPY run-document-server1.sh /app/ds/run-document-server1.sh
