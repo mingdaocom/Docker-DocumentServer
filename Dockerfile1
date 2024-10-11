@@ -1,33 +1,14 @@
 FROM hub.mingdao.com/md/documentserverbase:20210805_1610
 
-RUN apt-get -y update && \
-    #nginx \
-#    service redis-server stop && \
-#    service rabbitmq-server stop && \
-#    service supervisor stop && \
-#    service nginx stop && \
-#    apt-get --purge remove nginx && \
-#    curl -fsSL https://nginx.org/keys/nginx_signing.key | gpg --dearmor \
-#        | tee /usr/share/keyrings/nginx-archive-keyring.gpg >/dev/null && \
-#    echo "deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] http://nginx.org/packages/mainline/ubuntu `lsb_release -cs` nginx" \
-#        | tee /etc/apt/sources.list.d/nginx.list && \
-#    apt-get update && \
-#    apt-get -yq install nginx && \
-    #curl \
-    apt-get -yq install apt-transport-https ca-certificates gpg wget gnupg software-properties-common zip && \
-    test -f /usr/share/doc/kitware-archive-keyring/copyright || wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null && \
-    echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ focal main' | tee /etc/apt/sources.list.d/kitware.list >/dev/null && \
-    apt-get update && \
-    test -f /usr/share/doc/kitware-archive-keyring/copyright || rm /usr/share/keyrings/kitware-archive-keyring.gpg && \
-    apt-get -yq install kitware-archive-keyring && \
-    apt-get -yq install cmake && \
-    apt-get -yq install git && \
-    git clone https://gitee.com/my-mirrors/vcpkg.git && \
-    cd vcpkg && \
-    ./bootstrap-vcpkg.sh && \
-    ./vcpkg integrate install && \
-    ./vcpkg install curl[tool] && \
-    #rabbitmq
+RUN apt-get update && \
+#    nginx
+#    apt-get -yq install libxslt-dev libpcre3-dev zlib1g-dev libssl-dev libxml2-dev libxslt1-dev  libgd-dev google-perftools libgoogle-perftools-dev libperl-dev libgeoip-dev && \
+#    wget http://nginx.org/download/nginx-1.27.2.tar.gz && \
+#    tar xzf nginx-1.27.2.tar.gz && \
+#    cd nginx-1.27.2 && \
+#     ./configure --with-cc-opt='-g -O2 -fPIE -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2' --with-ld-opt='-Wl,-Bsymbolic-functions -fPIE -pie -Wl,-z,relro -Wl,-z,now' --prefix=/usr/share/nginx --conf-path=/etc/nginx/nginx.conf --http-log-path=/var/log/nginx/access.log --error-log-path=/var/log/nginx/error.log --lock-path=/var/lock/nginx.lock --pid-path=/run/nginx.pid --http-client-body-temp-path=/var/lib/nginx/body --http-fastcgi-temp-path=/var/lib/nginx/fastcgi --http-proxy-temp-path=/var/lib/nginx/proxy --http-scgi-temp-path=/var/lib/nginx/scgi --http-uwsgi-temp-path=/var/lib/nginx/uwsgi --with-pcre-jit --with-ipv6 --with-http_ssl_module --with-http_stub_status_module --with-http_realip_module --with-http_auth_request_module --with-http_addition_module --with-http_dav_module --with-http_geoip_module --with-http_gunzip_module --with-http_gzip_static_module --with-http_image_filter_module --with-http_v2_module --with-http_sub_module --with-http_xslt_module --with-stream --with-stream_ssl_module --with-mail --with-mail_ssl_module --with-threads && \
+#    make && make install && \
+#    cp -f /usr/share/nginx/sbin/nginx /usr/sbin/nginx && \
     wget -O- https://packages.erlang-solutions.com/ubuntu/erlang_solutions.asc | apt-key add - && \
     echo "deb https://packages.erlang-solutions.com/ubuntu focal contrib" | tee /etc/apt/sources.list.d/erlang-solution.list && \
     apt-get -yq remove rabbitmq-server && \
@@ -36,17 +17,17 @@ RUN apt-get -y update && \
     curl -s https://packagecloud.io/install/repositories/rabbitmq/rabbitmq-server/script.deb.sh | bash && \
     apt-get -yq install rabbitmq-server=3.11.28-1 && \
     #redis
-    apt-get remove -yq redis-server && \
     apt-get remove -yq --purge redis-server && \
     rm -rf /etc/redis && \
     add-apt-repository ppa:chris-lea/redis-server -y && \
     apt-get -yq install redis && \
-    #
+    rm -f /usr/bin/curl && \
     service redis-server stop && \
     service rabbitmq-server stop && \
     service supervisor stop && \
     service nginx stop && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/* \
+COPY usr /usr/
 COPY server/Common/config /etc/onlyoffice/documentserver/
 COPY config /app/ds/setup/config/
 COPY run-document-server1.sh /app/ds/run-document-server1.sh
