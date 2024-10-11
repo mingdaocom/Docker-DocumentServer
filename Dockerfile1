@@ -26,7 +26,7 @@ RUN apt-get update && \
     service rabbitmq-server stop && \
     service supervisor stop && \
     service nginx stop && \
-    rm -rf /var/lib/apt/lists/* \
+    rm -rf /var/lib/apt/lists/*
 COPY usr /usr/
 COPY server/Common/config /etc/onlyoffice/documentserver/
 COPY config /app/ds/setup/config/
