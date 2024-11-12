@@ -603,7 +603,7 @@ fi
 
 # nginx used as a proxy, and as data container status service.
 # it run in all cases.
-service nginx start
+#service nginx start
 
 if [ "${LETS_ENCRYPT_DOMAIN}" != "" -a "${LETS_ENCRYPT_MAIL}" != "" ]; then
   if [ ! -f "${SSL_CERTIFICATE_PATH}" -a ! -f "${SSL_KEY_PATH}" ]; then
