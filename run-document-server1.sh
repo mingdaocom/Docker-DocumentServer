@@ -616,6 +616,6 @@ fi
 #  documentserver-generate-allfonts.sh ${ONLYOFFICE_DATA_CONTAINER}
 #fi
 #documentserver-static-gzip.sh ${ONLYOFFICE_DATA_CONTAINER}
-
+sleep 5
 tail -f /var/log/${COMPANY_NAME}/**/*.log &
 wait $!
