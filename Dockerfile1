@@ -5,8 +5,37 @@ RUN service supervisor stop && \
     service redis-server stop && \
     service rabbitmq-server stop && \
     service nginx stop && \
+    apt-get update  && \
+    apt-get -yq install python3-pip  && \
+    pip3 uninstall urllib3 -y && \
+    pip3 uninstall requests -y  && \
+    pip3 uninstall configobj -y && \
+    pip3 uninstall certifi -y && \
+    pip3 uninstall idna -y && \
+    pip3 uninstall future -y && \
+    pip3 uninstall cryptography -y && \
+    pip3 uninstall setuptools -y && \
+    pip3 install setuptools && \
+    pip3 install urllib3 && \
+    pip3 install requests  && \
+    pip3 install configobj && \
+    pip3 install certifi && \
+    pip3 install idna && \
+    pip3 install future && \
+    pip3 install cryptography && \
     rm -rf /var/lib/apt/lists/* && \
-    rm -f /usr/bin/curl && \
+    rm -rf /usr/bin/curl && \
+    rm -rf /usr/lib/python3/dist-packages/requests-2.22.0.egg-info && \
+    rm -rf /usr/lib/python3/dist-packages/configobj-5.0.6.egg-info && \
+    rm -rf /usr/lib/python3/dist-packages/urllib3-1.25.8.egg-info && \
+    rm -rf /usr/lib/python3/dist-packages/setuptools-45.2.0.egg-info && \
+    rm -rf /usr/lib/python3/dist-packages/certifi-2019.11.28.egg-info && \
+    rm -rf /usr/lib/python3/dist-packages/idna-2.8.egg-info && \
+    rm -rf /usr/lib/python3/dist-packages/future-0.18.2.egg-info && \
+    rm -rf /usr/lib/python3/dist-packages/cryptography-2.8.egg-info && \
+    rm -rf /var/www/onlyoffice/documentserver/web-apps/apps/*/main/resources && \
+    rm -rf /var/www/onlyoffice/documentserver/sdkjs/common/Native/jquery_native.js && \
+    rm -rf /var/www/onlyoffice/documentserver/sdkjs-plugins/mendeley/scripts/mendeley-sdk/standalone.min.js.map && \
     cd /usr/sbin && \
     chmod +x nginx
 
