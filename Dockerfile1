@@ -1,6 +1,6 @@
 FROM hub.mingdao.com/md/documentserverbase:20241111_1442
 
-COPY usr /usr/
+#COPY usr /usr/
 RUN service supervisor stop && \
     service redis-server stop && \
     service rabbitmq-server stop && \
@@ -35,9 +35,9 @@ RUN service supervisor stop && \
     rm -rf /usr/lib/python3/dist-packages/cryptography-2.8.egg-info && \
     rm -rf /var/www/onlyoffice/documentserver/web-apps/apps/*/main/resources && \
     rm -rf /var/www/onlyoffice/documentserver/sdkjs/common/Native/jquery_native.js && \
-    rm -rf /var/www/onlyoffice/documentserver/sdkjs-plugins/mendeley/scripts/mendeley-sdk/standalone.min.js.map && \
-    cd /usr/sbin && \
-    chmod +x nginx
+    rm -rf /var/www/onlyoffice/documentserver/sdkjs-plugins/mendeley/scripts/mendeley-sdk/standalone.min.js.map
+#    cd /usr/sbin && \
+#    chmod +x nginx
 
 COPY server/Common/config /etc/onlyoffice/documentserver/
 COPY config /app/ds/setup/config/
