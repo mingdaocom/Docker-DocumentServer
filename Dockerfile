@@ -77,7 +77,7 @@ EXPOSE 80 443
 
 ARG COMPANY_NAME=onlyoffice
 ARG PRODUCT_NAME=documentserver
-ARG PACKAGE_URL="http://download.onlyoffice.com/install/documentserver/linux/${COMPANY_NAME}-${PRODUCT_NAME}_6.4.0_amd64.deb"
+ARG PACKAGE_URL="http://download.onlyoffice.com/install/documentserver/linux/${COMPANY_NAME}-${PRODUCT_NAME}_6.3.1_amd64.deb"
 
 ENV COMPANY_NAME=$COMPANY_NAME \
     PRODUCT_NAME=$PRODUCT_NAME
